@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('test DatePicker', async ({ page }) => {
   await page.goto('https://testautomationpractice.blogspot.com/');
-  const targetYear = "2024";
+  const targetYear = "2015";
   const targetMonth = "October";
 
 
@@ -37,18 +37,15 @@ test('test DatePicker', async ({ page }) => {
 
       await page.locator('[title="Prev"]').click()
       
-      
       }
 
-      else if(currentYear==targetYear && currmonthNumber<targetMonthInNumber){
+      else{
 
         await page.locator('[title="Next"]').click()
         
         }    
-
-
     }
-    await page.waitForTimeout(5000)
+    await page.waitForTimeout(2000)
 
 
 
