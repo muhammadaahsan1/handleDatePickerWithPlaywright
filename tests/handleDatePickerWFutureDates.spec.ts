@@ -23,6 +23,11 @@ test('test DatePicker w Future Dates', async ({ page }) => {
   console.log(monthToSelectDynamically)
   console.log(fullDateToSelectDynamically)
 
+  let calMonthNYear = page.locator('[class="ant-picker-header-view"]').textContent();
+  const expMonthNYear = `${yearToSelectDynamically}-${monthToSelectDynamically}-${dateToSelectDynamically}`
+
+
+
 
   
 
