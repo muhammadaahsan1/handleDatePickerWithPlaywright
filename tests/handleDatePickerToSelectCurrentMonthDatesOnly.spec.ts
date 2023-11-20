@@ -4,58 +4,31 @@ import { test, expect } from '@playwright/test';
  => A test case to test selection of current month's dates 
     from calendar interface in datepicker 
     (i.e. avoid dates of previous, future months)
+    >In this case you have to be careful and observe that the parent classe of each month will be different
  */
 
 
-test('test DatePicker', async ({ page }) => {
-  await page.goto('https://testautomationpractice.blogspot.com/');
-  const targetYear = "2021";
-  const targetMonth = "October";
-  const date = "27"
-  const nextButton = page.locator('[title="Next"]')
-  const previousButton = page.locator('[title="Prev"]')
-  const currYearLocator = page.locator('.ui-datepicker-year').first();
-  const currMonthLocator = page.locator('.ui-datepicker-month').first();
+test('test DatePicker with current months date selection only', async ({ page }) => {
+  await page.goto('https://ant.design/components/date-picker');
+  await expect(page.getByRole('heading',{name:'Examples'})).toBeVisible();
+  await page.waitForTimeout(5000) //placing a wait as datepicker element is taking time to load
+  const dateInputValue =  page.getByPlaceholder('Select date');
+  await page.waitForTimeout(2000)
+  await dateInputValue.first().click();
 
-  await page.click('#datepicker'); // opens calender
- 
 
-  while(true)
-  {
-    const currentYear = await currYearLocator.textContent();
-    const currentMonth = await currMonthLocator.textContent();
-    
-    function getMonthNumberFromName(monthName) {
-      return new Date(`${monthName} 1, 2022`).getMonth() + 1;
-    }
-    const currmonthNumber = getMonthNumberFromName(currentMonth) 
-    const targetMonthInNumber = getMonthNumberFromName(targetMonth) 
+  // To ensure that we select 1 only and not 11, 12 ..., exact: true is utilized
+  //selecting 1st of current month
+  await page.locator('[class="ant-picker-cell-inner"]').getByText('1', {exact:true}).first().click();
+  await expect(dateInputValue.first()).toHaveValue('2023-11-01')
+  
 
-    if(currentYear== targetYear && currmonthNumber==targetMonthInNumber)
-      {
-        break;
-      }
-      else if(currentYear<targetYear){
-          await nextButton.click();
-          
-    }
-    else if(currentYear>targetYear){
-      await previousButton.click();
-    } 
+  //selecting 30th of current month
+  await dateInputValue.first().click()
+  await page.locator('[class="ant-picker-cell-inner"]').getByText('30').last().click();
+  await expect(dateInputValue.first()).toHaveValue('2023-11-30')
 
-    else if(currentYear==targetYear &&  currmonthNumber>targetMonthInNumber){
-
-      await previousButton.click();
-      
-      }
-   // else block below is considering the situation where (currentYear==targetYear &&  currmonthNumber>targetMonthInNumber)
-      else{
-
-        await nextButton.click();
-        
-        }    
-    }
-    await page.getByRole('link').filter({hasText:date}).click();
-    await page.waitForTimeout(2000);
+  await page.waitForTimeout(2000)
+  
 
 });

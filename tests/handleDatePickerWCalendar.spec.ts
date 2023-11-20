@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
  */
 
 
-test('test DatePicker', async ({ page }) => {
+test('placing date dynamically on Calendar interface with any date previous or in future', async ({ page }) => {
   await page.goto('https://testautomationpractice.blogspot.com/');
   const targetYear = "2015";
   const targetMonth = "October";
