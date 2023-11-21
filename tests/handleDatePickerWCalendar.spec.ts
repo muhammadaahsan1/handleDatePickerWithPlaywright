@@ -57,6 +57,4 @@ test('placing date dynamically on Calendar interface with any date previous or i
     await page.getByRole('link').filter({hasText:date}).click();
     await page.waitForTimeout(4000)
 
-
-
 });

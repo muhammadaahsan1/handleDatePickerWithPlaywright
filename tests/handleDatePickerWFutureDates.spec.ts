@@ -12,22 +12,45 @@ test('test DatePicker w Future Dates', async ({ page }) => {
   //Dynamically selecting Date
 
   let date = new Date()
-  date.setDate(date.getDate()+5)
-  const dateToSelectDynamically = date.getDate().toString()
+  date.setDate(date.getDate()+15)
+  const dateToSelectDynamicallyInCalendar = date.getDate().toString()
+  const dateToMatchDynamically = ('0' + date.getDate()).slice(-2)
   const yearToSelectDynamically = date.getFullYear()
-  const monthToSelectDynamically = date.getMonth()+1
-  const fullDateToSelectDynamically= `${yearToSelectDynamically}-${monthToSelectDynamically}-${dateToSelectDynamically}`
+  const monthToSelectDynamically = ('0' + (date.getMonth()+1)).slice(-2);
+  const shortMonth = date.toLocaleString('En-US', { month: 'short' });
+  const fullDateToSelectDynamically= `${yearToSelectDynamically}-${monthToSelectDynamically}-${dateToMatchDynamically}`
 
-  console.log(dateToSelectDynamically)
+  console.log(dateToSelectDynamicallyInCalendar)
   console.log(yearToSelectDynamically)
-  console.log(monthToSelectDynamically)
+  console.log(monthToSelectDynamically+"hi")
   console.log(fullDateToSelectDynamically)
+  console.log(shortMonth)
 
-  let calMonthNYear = page.locator('[class="ant-picker-header-view"]').textContent();
-  const expMonthNYear = `${yearToSelectDynamically}-${monthToSelectDynamically}-${dateToSelectDynamically}`
+  let calMonthYear = await page.locator('[class="ant-picker-header-view"]').textContent();
+  const MonthYearToSelectInField = `${yearToSelectDynamically}-${monthToSelectDynamically}-${dateToMatchDynamically}`
+  const monthYearToSelectInCalendar =`${shortMonth}${yearToSelectDynamically}`
+  console.log(monthYearToSelectInCalendar)
+  console.log(calMonthYear)
 
+  while(!calMonthYear?.includes(monthYearToSelectInCalendar)){
+    console.log(calMonthYear+"hi")
+    console.log(monthYearToSelectInCalendar+"Hi2")
+    await page.locator('[class="ant-picker-header-next-btn"]').click();
+    calMonthYear = await page.locator('[class="ant-picker-header-view"]').textContent();
 
+  }
+  //selecting the date
 
+    
+      await page.locator('[class="ant-picker-cell-inner"]').getByText(dateToSelectDynamicallyInCalendar, {exact:true}).first().click();
+      await page.waitForTimeout(7000) 
+      await expect(dateInputValue.first()).toHaveValue(fullDateToSelectDynamically);
+      await page.waitForTimeout(7000)    
+   
+
+ 
+    
+  
 
   
 
